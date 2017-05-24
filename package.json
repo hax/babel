@@ -6,7 +6,8 @@
     "test": "make test",
     "build": "make build",
     "lint": "make lint",
-    "fix": "make fix"
+    "fix": "make fix",
+    "test-block-scoping": "node node_modules/mocha/bin/_mocha packages/babel-plugin-transform-es2015-block-scoping/test"
   },
   "devDependencies": {
     "async": "^1.5.0",

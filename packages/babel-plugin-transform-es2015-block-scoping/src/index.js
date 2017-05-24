@@ -143,6 +143,7 @@ const letReferenceFunctionVisitor = traverse.visitors.merge([{
     const localBinding = path.scope.getBindingIdentifier(path.node.name);
     if (localBinding && localBinding !== ref) return;
 
+    if (state.inLoop)
     state.closurify = true;
   }
 }, tdzVisitor]);
@@ -288,6 +289,17 @@ class BlockScoping {
       this.loopPath   = loopPath;
       this.loop       = loopPath.node;
     }
+
+    let inLoop = false
+    let p = blockPath
+    while (p) {
+      if (t.isLoop(p)) {
+        inLoop = true
+        break
+      }
+      p = p.parent
+    }
+    this.inLoop = inLoop
   }
 
   /**
@@ -563,6 +575,7 @@ class BlockScoping {
       letReferences: this.letReferences,
       closurify:     false,
       file:          this.file,
+      inLoop:        this.inLoop, // ?
       loopDepth:     0,
     };
 
