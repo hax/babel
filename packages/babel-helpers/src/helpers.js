@@ -454,27 +454,21 @@ helpers.selfGlobal = template(`
 
 helpers.set = template(`
   (function set(object, property, value, receiver) {
-    var desc = Object.getOwnPropertyDescriptor(object, property);
-
-    if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);
-
-      if (parent !== null) {
-        set(parent, property, value, receiver);
-      } else {
-        Object.defineProperty(receiver, property, {value: value});
+    var desc;
+    do {
+      desc = Object.getOwnPropertyDescriptor(object, property);
+      if (desc) {
+        if ('value' in desc) {
+          if (!desc.writable) return;
+          Object.defineProperty(receiver, property, {value: value});
+        } else {
+          if (desc.set) desc.set.call(receiver, value);
+        }
+        return;
       }
-    } else if ("value" in desc && desc.writable) {
-      desc.value = value;
-    } else {
-      var setter = desc.set;
-
-      if (setter !== undefined) {
-        setter.call(receiver, value);
-      }
-    }
-
-    return value;
+      object = Object.getPrototypeOf(object);
+    } while (object);
+    Object.defineProperty(receiver, property, {value: value});
   });
 `);
 
