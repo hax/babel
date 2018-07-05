@@ -1,0 +1,4 @@
+{
+  "throws": "Instance variables initializer is disabled (2:12)",
+  "plugins": [["classes-1.1", {"instanceVariablesInitializer": false}]]
+}

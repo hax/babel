@@ -1,0 +1,4 @@
+{
+  "throws": "Unexpected token (3:10)",
+  "plugins": ["classes-1.1"]
+}
